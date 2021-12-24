@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:layout_above="@id/bottom_bar">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@color/white"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top|left"
+                    android:hint="Title"
+                    android:inputType="textCapWords|textMultiLine"
+                    android:maxLines="10"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textSize="19sp"
+                    android:fontFamily="@font/product_sans_regular"/>
+
+
+                <EditText
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="@color/white"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="top|left"
+                    android:hint="Note"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/roboto_regular"
+                    android:paddingBottom="11dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/menufile"
+        tools:ignore="BottomAppBar"
+        android:id="@+id/bottom_bar"
+        android:backgroundTint="@color/white"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
+        android:theme="@style/AppThemeMaterial"
+        app:fabCradleRoundedCornerRadius="80dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_outline_add_box_24"
+            android:scaleType="centerCrop"
+            android:id="@+id/plus_image"
+            android:clickable="true"
+            android:background="@drawable/ripple_effect_for_note_activity"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:gravity="center"
+            android:fontFamily="@font/roboto_regular"
+            android:id="@+id/note_activity_date"/>
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+
+</RelativeLayout>

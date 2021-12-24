@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Keep Notes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_take_photo">Take photo</string>
+    <string name="action_add_image">Add image</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="update_note">Update a Note</string>
+</resources>

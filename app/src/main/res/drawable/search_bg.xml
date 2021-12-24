@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners android:topRightRadius="30dp"
+        android:topLeftRadius="30dp"
+        android:bottomRightRadius="30dp"
+        android:bottomLeftRadius="30dp" />
+    <solid android:color="@color/search_bar_color"/>
+    <ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:color="#D6D7DC">
+
+        <item>
+            <shape android:shape="oval">
+                <solid android:color="@color/bottom_app_bar_color"/>
+                <corners android:radius="16dp"/>
+            </shape>
+        </item>
+    </ripple>
+
+</shape>
