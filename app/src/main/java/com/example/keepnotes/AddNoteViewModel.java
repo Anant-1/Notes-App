@@ -8,7 +8,7 @@ import com.example.keepnotes.databases.NotesEntry;
 
 public class AddNoteViewModel extends ViewModel {
 
-    private LiveData<NotesEntry> note;
+    private LiveData<NotesEntry>  note;
 
     public AddNoteViewModel(AppDatabase db, int noteId) {
         note = db.notesDao().loadTaskById(noteId);
