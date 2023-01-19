@@ -61,7 +61,7 @@
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textSize="16sp"
                     android:fontFamily="@font/roboto_regular"
-                    android:paddingBottom="11dp"/>
+                    android:paddingBottom="11dp" />
 
             </LinearLayout>
 
@@ -92,6 +92,17 @@
             android:clickable="true"
             android:background="@drawable/ripple_effect_for_note_activity"/>
 
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/ic_outline_draw_24"
+            android:scaleType="centerCrop"
+            android:id="@+id/draw_icon"
+            android:clickable="true"
+            android:background="@drawable/ripple_effect_for_note_activity"
+
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

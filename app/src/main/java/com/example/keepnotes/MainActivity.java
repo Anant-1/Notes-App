@@ -118,24 +118,24 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
 
         mRecyclerView.setAdapter(mAdapter);
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        int adapterPosition = viewHolder.getAdapterPosition();
-                        List<NotesEntry> notes = mAdapter.getTasks();
-                        mDb.notesDao().deleteNote(notes.get(adapterPosition));
-                    }
-                });
-            }
-        }).attachToRecyclerView(mRecyclerView);
+//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+//            @Override
+//            public boolean onMove(@NonNull @NotNull RecyclerView recyclerView, @NonNull @NotNull RecyclerView.ViewHolder viewHolder, @NonNull @NotNull RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull @NotNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        int adapterPosition = viewHolder.getAdapterPosition();
+//                        List<NotesEntry> notes = mAdapter.getTasks();
+//                        mDb.notesDao().deleteNote(notes.get(adapterPosition));
+//                    }
+//                });
+//            }
+//        }).attachToRecyclerView(mRecyclerView);
 
 //        Bundle bundle = transformationLayout.withActivity(this, "myTransitionName");
 //        Intent intent = new Intent(this, No.class);

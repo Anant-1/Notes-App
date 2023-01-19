@@ -9,13 +9,22 @@
         android:roundIcon="@mipmap/notes1"
         android:supportsRtl="true"
         android:theme="@style/Theme.KeepNotes">
-
-        <activity android:name=".AddNoteActivity"
-            android:theme="@style/AddNoteActivity"
-            android:label="Add a Note"
-            android:parentActivityName=".MainActivity">
-
+        <activity
+            android:name=".CreateDrawing"
+            android:exported="false"
+            android:parentActivityName=".AddNoteActivity">
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="" />-->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AddNoteActivity" />
         </activity>
+        <activity
+            android:name=".AddNoteActivity"
+            android:label="Add Note"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AddNoteActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
