@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".AddNoteActivity">
-
     <item
         android:id="@+id/overflowMenu"
         android:icon="@drawable/more_vert2"
         android:title=""
         app:showAsAction="always">
-
         <menu>
             <item
                 android:id="@+id/delete_note"

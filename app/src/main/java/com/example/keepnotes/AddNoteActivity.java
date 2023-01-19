@@ -10,6 +10,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +49,6 @@ import java.util.Date;
 
 public class AddNoteActivity extends AppCompatActivity {
 
-
     private EditText mTitleEditText;
     private EditText mNoteEditText;
     private AppDatabase mDb;
@@ -55,6 +57,8 @@ public class AddNoteActivity extends AppCompatActivity {
     private String mImageString = null;
     private TextView mDateTimeTextView;
     private boolean mNoteHasChanged = false;
+    private String mNoteText = null;
+    private ImageButton mDrawBtn = null;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -88,13 +92,20 @@ public class AddNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_note);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24);
-        getSupportActionBar().setCustomView(R.layout.back_btn);
+//        getSupportActionBar().setCustomView(R.layout.back_btn);
+//        getSupportActionBar().setCustomView(R.layout.copy_btn);
 
 
         mDb = AppDatabase.getInstance(getApplicationContext());
 
         initViews();
-
+        mDrawBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddNoteActivity.this, CreateDrawing.class);
+                startActivity(intent);
+            }
+        });
         mTitleEditText.setOnTouchListener(mTouchListener);
         mNoteEditText.setOnTouchListener(mTouchListener);
         mImageNote.setOnTouchListener(mTouchListener);
@@ -220,6 +231,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 } else {
                     NotesEntry newNote = new NotesEntry(intentNotesEntry.getTitle(), intentNotesEntry.getNote(), intentNotesEntry.getEditedAt(), intentNotesEntry.getImageUri());
                     mDb.notesDao().insertNote(newNote);
+                    Toast.makeText(AddNoteActivity.this, "Copy Successfully Created", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 runOnUiThread(new Runnable() {
@@ -235,9 +247,11 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     private void populateUI(NotesEntry note) {
+        mNoteText = note.getNote();
         mTitleEditText.setText(note.getTitle());
-        mNoteEditText.setText(note.getNote());
+        mNoteEditText.setText(mNoteText);
         date = note.getEditedAt();
+
         dateFormatter(date);
         mDateTimeTextView.setText("Edited " + dateFormat);
         if (note.getImageUri() != null) {
@@ -254,6 +268,7 @@ public class AddNoteActivity extends AppCompatActivity {
         mImageNote = findViewById(R.id.image_note);
         mBottomAppBar = findViewById(R.id.bottom_bar);
         mDateTimeTextView = findViewById(R.id.note_activity_date);
+        mDrawBtn = findViewById(R.id.draw_icon);
     }
 
     @Override
@@ -274,6 +289,12 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.copy_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: // for up arrow button
@@ -283,6 +304,12 @@ public class AddNoteActivity extends AppCompatActivity {
                 Animatoo.animateZoom(this);
                 finish();
                 return true;
+            case R.id.copy_btn:
+
+                ClipboardManager clipboardManager = (ClipboardManager)this.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData data = ClipData.newPlainText("text", mNoteText);
+                clipboardManager.setPrimaryClip(data);
+                Toast.makeText(AddNoteActivity.this, "Text Copied", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -389,3 +416,5 @@ public class AddNoteActivity extends AppCompatActivity {
         });
     }
 }
+
+
