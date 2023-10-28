@@ -51,12 +51,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         String note = noteEntry.getNote();
         Date date = noteEntry.getEditedAt();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE hh:mma MMM d, yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE HH:mm MMM d, yyyy");
         String dateFormat = formatter.format(date);
+//        System.out.println("date-" + dateFormat);
         try {
             dateFormat = formatToYesterdayOrToday(dateFormat);
+//            System.out.println("date- try" + dateFormat);
         } catch (ParseException e) {
             e.printStackTrace();
+//            System.out.println("date- exception " + e.getMessage());
         }
 
         holder.titleTextView.setText(title);
@@ -84,22 +87,24 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         notifyDataSetChanged();
     }
 
-    public List<NotesEntry> getTasks() {
-        return mNotesEntries;
-    }
+//    public List<NotesEntry> getTasks() {
+//        return mNotesEntries;
+//    }
 
     public interface ItemClickListener {
         void onItemClickListener(int itemId);
     }
 
     public static String formatToYesterdayOrToday(String date) throws ParseException {
-        Date dateTime = new SimpleDateFormat("EEE hh:mma MMM d, yyyy").parse(date);
+//        System.out.println("date- func() " + date);
+        Date dateTime = new SimpleDateFormat("EEE HH:mm MMM d, yyyy").parse(date);
+//        System.out.println("date-" + dateTime);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateTime);
         Calendar today = Calendar.getInstance();
         Calendar yesterday = Calendar.getInstance();
         yesterday.add(Calendar.DATE, -1);
-        DateFormat timeFormatter = new SimpleDateFormat("hh:mma");
+        DateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
         if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
             return "Today " + timeFormatter.format(dateTime);
@@ -112,7 +117,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
 
 
     class NotesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
         TextView titleTextView;
         TextView noteTextView;
         TextView dateTimeTextView;

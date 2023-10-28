@@ -1,14 +1,15 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
-    compileSdkVersion 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.keepnotes"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -25,10 +26,30 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.example.keepnotes'
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
+
+    implementation 'com.google.firebase:firebase-firestore:24.8.1'
+    implementation 'org.chromium.net:cronet-embedded:113.5672.61'
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-database:20.2.2'
+    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+
     def room_version = "2.3.0"
 
     implementation "androidx.room:room-runtime:$room_version"
@@ -49,5 +70,17 @@ dependencies {
     implementation 'com.github.dhaval2404:imagepicker-support:1.7.1'
     implementation 'com.github.mohammadatif:Animatoo:master'
     implementation "com.github.skydoves:transformationlayout:1.1.1"
+
+    // Import the BoM for the Firebase platform
+    implementation platform("com.google.firebase:firebase-bom:32.3.1")
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation "com.google.firebase:firebase-auth:22.1.2"
+    // Also add the dependency for the Google Play services library and specify its version
+    implementation "com.google.android.gms:play-services-auth:20.7.0"
+
+    implementation 'com.squareup.picasso:picasso:2.8'
+    implementation 'jp.wasabeef:picasso-transformations:2.4.0'
+    implementation 'com.google.code.gson:gson:2.2.+'
 
 }

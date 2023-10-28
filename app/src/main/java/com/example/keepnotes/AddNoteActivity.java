@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,6 +16,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -39,6 +43,12 @@ import com.example.keepnotes.databases.NotesEntry;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.skydoves.transformationlayout.TransformationAppCompatActivity;
 import com.skydoves.transformationlayout.TransformationCompat;
 import com.skydoves.transformationlayout.TransformationLayout;
@@ -59,6 +69,8 @@ public class AddNoteActivity extends AppCompatActivity {
     private boolean mNoteHasChanged = false;
     private String mNoteText = null;
     private ImageButton mDrawBtn = null;
+    private FirebaseDatabase db = null;
+    private DatabaseReference reference = null;
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -73,17 +85,14 @@ public class AddNoteActivity extends AppCompatActivity {
     private static final int DEFAULT_TASK_ID = -1;
     // Extra for the task ID to be received after rotation
     public static final String INSTANCE_TASK_ID = "instanceTaskId";
-
     private int mTaskId = DEFAULT_TASK_ID;
-
     private final int TAKE_PHOTO_ID = 1;
     private final int ADD_IMAGE_ID = 2;
     private BottomAppBar mBottomAppBar;
     private String dateFormat;
     private Date date;
-
     private NotesEntry intentNotesEntry;
-
+    private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        TransformationLayout.Params params = getIntent().getParcelableExtra("TransformationParams");
@@ -115,6 +124,9 @@ public class AddNoteActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_preference_name), MODE_PRIVATE);
+        userId = sharedPreferences.getString(getString(R.string.key_user_id), "");
+
         if (intent != null && intent.hasExtra(EXTRA_TASK_ID)) {
             setTitle(getString(R.string.update_note));
             if (mTaskId == DEFAULT_TASK_ID) {
@@ -131,6 +143,14 @@ public class AddNoteActivity extends AppCompatActivity {
                 });
             }
         }
+
+//        if (intent != null && intent.hasExtra("drawing")) {
+//            byte[] byteArray = getIntent().getByteArrayExtra("drawing");
+//            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//            mImageDrawing.setImageBitmap(bmp);
+//            System.out.println("drawing- show drawing " + bmp);
+//        }
+
         date = new Date();
         dateFormatter(date);
         mDateTimeTextView.setText("Edited " + dateFormat);
@@ -148,7 +168,11 @@ public class AddNoteActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.delete_note:
-                        deleteNote();
+                        if(mTaskId == DEFAULT_TASK_ID) {
+                            deleteNote();
+                        }else{
+                            showDeleteConfirmationDialog();
+                        }
                         return true;
                     case R.id.make_copy_note:
                         makeCopy();
@@ -209,7 +233,7 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     private void dateFormatter(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE hh:mma MMM d, yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE HH:mm MMM d, yyyy");
         dateFormat = formatter.format(date);
         try {
             dateFormat = NotesAdapter.formatToYesterdayOrToday(dateFormat);
@@ -227,21 +251,52 @@ public class AddNoteActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (mTaskId == DEFAULT_TASK_ID) {
-                    finish();
-                } else {
-                    NotesEntry newNote = new NotesEntry(intentNotesEntry.getTitle(), intentNotesEntry.getNote(), intentNotesEntry.getEditedAt(), intentNotesEntry.getImageUri());
-                    mDb.notesDao().insertNote(newNote);
-                    Toast.makeText(AddNoteActivity.this, "Copy Successfully Created", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mTaskId == DEFAULT_TASK_ID) {
-                            Toast.makeText(AddNoteActivity.this, "Cant make copy of unsaved notes", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTaskId == DEFAULT_TASK_ID) {
+                                Toast.makeText(AddNoteActivity.this, "Cant make copy of unsaved notes", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                else {
+                    Date date = new Date();
+                    NotesEntry newNote = new NotesEntry(intentNotesEntry.getTitle(), intentNotesEntry.getNote(), date, intentNotesEntry.getImageUri());
+                    mDb.notesDao().insertNote(newNote);
+//                    {
+//                    Contains logic if we not choose id as a node and choose title as a node and title is not unique so that we make copy of that note
+//                    String newTitle = newNote.getTitle();
+//                    newTitle += "^" + Integer.toString(newNote.getId()+1);
+//                    String finalNewTitle = newTitle;
+//                        db = FirebaseDatabase.getInstance();
+//                        reference = db.getReference().child(getString(R.string.firebase_users)).child(userId).child(getString(R.string.firebase_notes));
+//                        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                String str = finalNewTitle;
+//                                while(snapshot.hasChild(str)) {
+//                                    int idx = str.indexOf("^");
+//                                    int no = Integer.parseInt(str.substring(idx+1));
+//                                    str = str.substring(0, idx+1);
+//                                    str += Integer.toString(no+1);
+//                                }
+////                            reference.child(str).setValue(newNote);
+//                            }
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+//                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(AddNoteActivity.this, "Copy Successfully Created", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                finish();
             }
         });
     }
@@ -300,12 +355,10 @@ public class AddNoteActivity extends AppCompatActivity {
             case android.R.id.home: // for up arrow button
                 if (mNoteHasChanged)
                     onSave();
-                NavUtils.navigateUpFromSameTask(AddNoteActivity.this);
                 Animatoo.animateZoom(this);
                 finish();
                 return true;
             case R.id.copy_btn:
-
                 ClipboardManager clipboardManager = (ClipboardManager)this.getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData data = ClipData.newPlainText("text", mNoteText);
                 clipboardManager.setPrimaryClip(data);
@@ -329,17 +382,20 @@ public class AddNoteActivity extends AppCompatActivity {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
+                db = FirebaseDatabase.getInstance();
+                reference = db.getReference().child(getString(R.string.firebase_users)).child(userId).child(getString(R.string.firebase_notes));
                 if (mTaskId == DEFAULT_TASK_ID) {
                     //Insert new note
-                    if ((title == null || title.length() == 0) && (note == null || note.length() == 0)) {
-                    } else {
+                    if ((title != null && title.length() > 0) && (note != null && note.length() > 0)) {
                         mDb.notesDao().insertNote(notesEntry);
+//                        reference.child(title).setValue(notesEntry);
                     }
                 } else {
                     //Update note
                     System.out.println("On update called");
                     notesEntry.setId(mTaskId);
                     mDb.notesDao().updateNote(notesEntry);
+                    reference.child(Integer.toString(mTaskId)).setValue(notesEntry);
                 }
                 runOnUiThread(new Runnable() {
                     @Override
@@ -355,7 +411,7 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         });
     }
-
+    // For back button
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -399,21 +455,56 @@ public class AddNoteActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (mTaskId == DEFAULT_TASK_ID) {
-                    finish();
-                } else {
-                    mDb.notesDao().deleteNote(intentNotesEntry);
-                    finish();
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mTaskId == DEFAULT_TASK_ID) {
-                            Toast.makeText(AddNoteActivity.this, "Cant delete unsaved notes", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mTaskId == DEFAULT_TASK_ID) {
+                                Toast.makeText(AddNoteActivity.this, "Can't delete unsaved note", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    db = FirebaseDatabase.getInstance();
+                    reference = db.getReference().child(getString(R.string.firebase_users)).child(userId).child(getString(R.string.firebase_notes));
+                    reference.child(Integer.toString(intentNotesEntry.getId())).removeValue();
+                    mDb.notesDao().deleteNote(intentNotesEntry);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(AddNoteActivity.this, "Note Deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                finish();
             }
         });
+    }
+
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm the action");
+        builder.setMessage("Do you really want to delete the note?");
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so delete the pet.
+                deleteNote();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the pet.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
 

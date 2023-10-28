@@ -7,4 +7,18 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="update_note">Update Note</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="default_web_client_id">441611440697-k7m1f034dgm8k5gapk1nnk0fnn9okpk1.apps.googleusercontent.com</string>
+    <string name="key_user_id">user-id</string>
+    <string name="firebase_users">users</string>
+    <string name="shared_preference_name">signin</string>
+    <string name="firebase_notes">notes</string>
 </resources>

@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.keepnotes.databases.AppDatabase;
 import com.example.keepnotes.databases.NotesEntry;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,10 +22,7 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
         AppDatabase database = AppDatabase.getInstance(this.getApplication());
         notes = database.notesDao().loadAllNotes();
-        System.out.println("Notes size in main view model class : " + notes);
     }
 
     public LiveData<List<NotesEntry>> getNotes() { return notes; }
-
-
 }

@@ -13,17 +13,18 @@
                 android:id="@+id/delete_note"
                 android:icon="@drawable/ic_outline_delete_outline_24"
                 android:title="Delete"
-                app:showAsAction="always|withText"/>
+                app:showAsAction="never"
+                />
             <item
                 android:id="@+id/make_copy_note"
                 android:icon="@drawable/ic_outline_content_copy_24"
                 android:title="Make a copy"
-                app:showAsAction="always|withText"/>
+                app:showAsAction="never"/>
             <item
                 android:id="@+id/share_note"
                 android:icon="@drawable/ic_outline_share_24"
                 android:title="Share"
-                app:showAsAction="always|withText"/>
+                app:showAsAction="never"/>
         </menu>
     </item>
 </menu>
