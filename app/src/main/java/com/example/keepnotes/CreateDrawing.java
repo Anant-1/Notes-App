@@ -1,19 +1,10 @@
 package com.example.keepnotes;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import android.annotation.SuppressLint;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,12 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.kyanogen.signatureview.SignatureView;
-
-import java.io.ByteArrayOutputStream;
-import java.security.Signature;
-
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class CreateDrawing extends AppCompatActivity {

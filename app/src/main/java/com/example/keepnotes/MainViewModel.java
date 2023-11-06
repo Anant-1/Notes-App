@@ -8,8 +8,6 @@ import androidx.lifecycle.LiveData;
 
 import com.example.keepnotes.databases.AppDatabase;
 import com.example.keepnotes.databases.NotesEntry;
-import com.google.firebase.database.FirebaseDatabase;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

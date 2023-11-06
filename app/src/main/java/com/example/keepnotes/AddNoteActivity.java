@@ -5,11 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NavUtils;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -17,8 +14,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,27 +31,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.keepnotes.databases.AppDatabase;
 import com.example.keepnotes.databases.NotesEntry;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.skydoves.transformationlayout.TransformationAppCompatActivity;
-import com.skydoves.transformationlayout.TransformationCompat;
-import com.skydoves.transformationlayout.TransformationLayout;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 public class AddNoteActivity extends AppCompatActivity {
 
     private EditText mTitleEditText;
@@ -386,7 +370,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 reference = db.getReference().child(getString(R.string.firebase_users)).child(userId).child(getString(R.string.firebase_notes));
                 if (mTaskId == DEFAULT_TASK_ID) {
                     //Insert new note
-                    if ((title != null && title.length() > 0) && (note != null && note.length() > 0)) {
+                    if ((notesEntry.getTitle() != null && notesEntry.getTitle().length() > 0) && (note != null && note.length() > 0)) {
                         mDb.notesDao().insertNote(notesEntry);
 //                        reference.child(title).setValue(notesEntry);
                     }
@@ -401,7 +385,7 @@ public class AddNoteActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (mTaskId == DEFAULT_TASK_ID) {
-                            if ((title == null || title.length() == 0) && (note == null || note.length() == 0)) {
+                            if ((notesEntry.getTitle() == null || notesEntry.getTitle().length() == 0) && (note == null || note.length() == 0)) {
                                 Toast.makeText(AddNoteActivity.this, "Empty note discarded", Toast.LENGTH_SHORT).show();
                             }
                         }
