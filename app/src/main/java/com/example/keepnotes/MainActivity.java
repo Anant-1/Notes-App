@@ -40,6 +40,8 @@ import android.widget.Toast;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.example.keepnotes.databases.AppDatabase;
 import com.example.keepnotes.databases.NotesEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -295,20 +297,23 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
             public void onChanged(List<NotesEntry> notesEntries) {
                 if(notesEntries == null || notesEntries.isEmpty()) {
                     reference = db.getReference().child(getString(R.string.firebase_users)).child(userId).child(getString(R.string.firebase_notes));
-                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    reference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            List<NotesEntry> tempNotes = new ArrayList<>();
                             if(snapshot.hasChildren() && snapshot.exists()) {
                                 System.out.println("t- children true");
+
                                 for(DataSnapshot ds : snapshot.getChildren()) {
                                     NotesEntry notesEntry = createNoteFromSnapshot(ds);
+                                    tempNotes.add(notesEntry);
+//                                    System.out.println("t- notes: " + notesEntry.toString());
                                     AppExecutors.getInstance().diskIO().execute(new Runnable() {
                                         @Override
                                         public void run() {
                                             mDb.notesDao().insertNote(notesEntry);
                                         }
                                     });
-
                                 }
                             }else{
                                 setData(notesEntries);
@@ -348,30 +353,39 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
     protected void bindImage(ImageView imgView) {
         sharedPreferences = getSharedPreferences(getString(R.string.shared_preference_name), MODE_PRIVATE);
         userId = sharedPreferences.getString(getString(R.string.key_user_id), "");
+        String profilePhotoUrl = sharedPreferences.getString(getString(R.string.profile_img), "");
+        if(!profilePhotoUrl.isEmpty()) {
+            setPhotoFromUrl(imgView, profilePhotoUrl);
+            return;
+        }
         reference = db.getReference().child(getString(R.string.firebase_users)).child(userId);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 String profileUrl = snapshot.child("profile").getValue().toString();
                 if(snapshot.exists()) {
-                    Picasso.get()
-                            .load(profileUrl)
-//                            .resize(100, 100)
-                            .transform(new CropCircleTransformation()).into(imgView);
-                    progressBar.setVisibility(View.GONE);
-                    searchView.setVisibility(View.VISIBLE);
-                    searchImageView.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    frameLayout.setVisibility(View.VISIBLE);
+                    setPhotoFromUrl(imgView, profileUrl);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
+
+    private void setPhotoFromUrl(ImageView imgView, String profilePhotoUrl) {
+        Picasso.get()
+                .load(profilePhotoUrl)
+//                            .resize(100, 100)
+                .transform(new CropCircleTransformation()).into(imgView);
+        progressBar.setVisibility(View.GONE);
+        searchView.setVisibility(View.VISIBLE);
+        searchImageView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        frameLayout.setVisibility(View.VISIBLE);
+    }
+
     private void saveNoteToFirebase(NotesEntry notesEntry) {
         AppExecutors.getInstance().diskIO().execute(new Runnable() {
             @Override
@@ -393,19 +407,15 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
     }
 
     private static NotesEntry createNoteFromSnapshot(@NonNull DataSnapshot snapshot) {
-        String noteString = snapshot.getValue().toString();
         NotesEntry notesEntry = null;
         try {
-            JSONObject noteJson = new JSONObject(noteString);
-            String note = noteJson.getString("note");
-            String title = noteJson.getString("title");
-            int id = noteJson.getInt("id");
-            String imageUri = noteJson.has("imageUri") ? noteJson.getString("imageUri") : null;
-            JSONObject editedAt = noteJson.getJSONObject("editedAt");
-            Timestamp ts=new Timestamp(editedAt.getLong("time"));
+            String note = snapshot.child("note").getValue(String.class);
+            String title = snapshot.child("title").getValue(String.class);
+            int id = snapshot.child("id").getValue(Integer.class);
+            String imageUri = snapshot.child("imageUri").exists() ? snapshot.child("imageUri").getValue(String.class) : null;
+            Timestamp ts=new Timestamp(snapshot.child("editedAt").child("time").getValue(Long.class));
             Date date=new Date(ts.getTime());
             notesEntry = new NotesEntry(id, title, note, date, imageUri);
-
         } catch (Exception e) {
             Log.d("Parse Failed", e.toString());
         }

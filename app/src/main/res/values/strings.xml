@@ -21,4 +21,7 @@
     <string name="firebase_users">users</string>
     <string name="shared_preference_name">signin</string>
     <string name="firebase_notes">notes</string>
+    <string name="profile_img">profile-img</string>
+    <string name="user_name">user-name</string>
+    <string name="user_email">user-email</string>
 </resources>

@@ -52,28 +52,28 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     protected void bindImage(ImageView imgView) {
-
+        final int w = 250, h = 250;
         String userId = sharedPreferences.getString(getString(R.string.key_user_id), "");
+        String profilePhotoUrl = sharedPreferences.getString(getString(R.string.profile_img), "");
+        String profileName = sharedPreferences.getString(getString(R.string.user_name), "");
+        String profileEmail = sharedPreferences.getString(getString(R.string.user_email), "");
+
+        if(!profilePhotoUrl.isEmpty() && !profileName.isEmpty() && !profileEmail.isEmpty()) {
+            bindProfileInformation(w, h, profilePhotoUrl, profileName, profileEmail, imgView);
+            return;
+        }
+        
         db = FirebaseDatabase.getInstance();
         DatabaseReference reference = db.getReference().child(getString(R.string.firebase_users)).child(userId);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int w = 250, h = 250;
-                String profileUrl = snapshot.child("profile").getValue().toString();
-                if(snapshot.exists()) {
-                    profileNameTextView.setText(snapshot.child("name").getValue().toString());
-                    profileEmailTextView.setText((CharSequence) snapshot.child("email").getValue().toString());
-                    Picasso.get()
-                            .load(profileUrl)
-                            .resize(w, h)
-                            .transform(new CropCircleTransformation()).into(imgView);
 
-                    progressBar.setVisibility(View.GONE);
-                    profileImgView.setVisibility(View.VISIBLE);
-                    profileEmailTextView.setVisibility(View.VISIBLE);
-                    profileNameTextView.setVisibility(View.VISIBLE);
-                    signOutButton.setVisibility(View.VISIBLE);
+                if(snapshot.exists()) {
+                    String profileUrl = snapshot.child("profile").getValue().toString();
+                    String profileName = snapshot.child("name").getValue().toString();
+                    String profileEmail = snapshot.child("email").getValue().toString();
+                    bindProfileInformation(w, h, profileUrl, profileName, profileEmail, imgView);
                 }
             }
             @Override
@@ -82,6 +82,21 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
     }
+
+    private void bindProfileInformation(int w, int h, String profileUrl, String name, String email, ImageView imgView) {
+        Picasso.get()
+                .load(profileUrl)
+                .resize(w, h)
+                .transform(new CropCircleTransformation()).into(imgView);
+        profileNameTextView.setText(name);
+        profileEmailTextView.setText(email);
+        progressBar.setVisibility(View.GONE);
+        profileImgView.setVisibility(View.VISIBLE);
+        profileEmailTextView.setVisibility(View.VISIBLE);
+        profileNameTextView.setVisibility(View.VISIBLE);
+        signOutButton.setVisibility(View.VISIBLE);
+    }
+
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: // for up arrow button
