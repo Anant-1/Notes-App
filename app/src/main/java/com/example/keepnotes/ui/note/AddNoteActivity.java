@@ -1,4 +1,4 @@
-package com.example.keepnotes;
+package com.example.keepnotes.ui.note;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,8 +34,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.example.keepnotes.databases.AppDatabase;
-import com.example.keepnotes.databases.NotesEntry;
+import com.example.keepnotes.R;
+import com.example.keepnotes.data.database.AppDatabase;
+import com.example.keepnotes.data.database.NotesEntry;
+import com.example.keepnotes.ui.drawing.CreateDrawing;
+import com.example.keepnotes.ui.main.NotesAdapter;
+import com.example.keepnotes.utils.AppExecutors;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomappbar.BottomAppBar;
