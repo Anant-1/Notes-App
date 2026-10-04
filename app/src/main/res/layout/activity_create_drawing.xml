@@ -1,81 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sign="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <com.kyanogen.signatureview.SignatureView
-        android:id="@+id/signature_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        sign:backgroundColor="#ffffff"
-        sign:enableSignature="true"
-        sign:penColor="#000000"
-        sign:penSize="5dp" />
-
+    android:layout_height="match_parent"
+    android:background="#F4F6FA"
+    android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <LinearLayout
-        android:id="@+id/options_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center"
+        android:layout_height="64dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back"
+            android:padding="10dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:tint="#202534" />
+
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="1">
-
-            <SeekBar
-                android:id="@+id/seek_pen_size"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/txt_pen_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5dp"
-                android:textColor="@color/black">
-
-            </TextView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
-            android:gravity="end">
+            android:text="Drawing"
+            android:textColor="#202534"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btn_eraser"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:scaleType="center"
-                android:src="@drawable/ic_eraser" />
+        <TextView
+            android:id="@+id/btn_undo"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:text="Undo"
+            android:textColor="#495469"
+            android:textSize="13sp" />
 
-            <ImageButton
-                android:id="@+id/btn_color_picker"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:scaleType="center"
-                android:src="@drawable/ic_color" />
+        <TextView
+            android:id="@+id/btn_redo"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:text="Redo"
+            android:textColor="#495469"
+            android:textSize="13sp" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/btn_clear"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:text="Clear"
+            android:textColor="#536DFE"
+            android:textSize="13sp" />
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="14dp"
+        android:layout_weight="1"
+        android:background="@drawable/drawing_canvas_bg"
+        android:elevation="2dp"
+        android:padding="8dp">
 
-</RelativeLayout>
+        <com.kyanogen.signatureview.SignatureView
+            android:id="@+id/signature_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            sign:backgroundColor="#ffffff"
+            sign:enableSignature="true"
+            sign:penColor="#202534"
+            sign:penSize="5dp" />
+    </FrameLayout>
+
+    <include layout="@layout/layout_drawing_tools" />
+</LinearLayout>

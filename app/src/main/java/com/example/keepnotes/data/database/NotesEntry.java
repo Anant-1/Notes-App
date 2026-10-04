@@ -1,4 +1,4 @@
-package com.example.keepnotes.databases;
+package com.example.keepnotes.data.database;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;

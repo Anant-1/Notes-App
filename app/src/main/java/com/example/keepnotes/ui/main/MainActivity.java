@@ -1,4 +1,4 @@
-package com.example.keepnotes;
+package com.example.keepnotes.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,8 +31,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.example.keepnotes.databases.AppDatabase;
-import com.example.keepnotes.databases.NotesEntry;
+import com.example.keepnotes.R;
+import com.example.keepnotes.data.database.AppDatabase;
+import com.example.keepnotes.data.database.NotesEntry;
+import com.example.keepnotes.ui.note.AddNoteActivity;
+import com.example.keepnotes.utils.AppExecutors;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
     private ImageView emptyView;
     private TextView emptyView2;
     private EditText searchEditText;
+    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,12 +191,9 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
     }
 
     private void deleteAllNotes() {
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDb.notesDao().deleteAllNotes(mNotesEntries);
-            }
-        });
+        if (mViewModel != null && mNotesEntries != null) {
+            mViewModel.deleteAllNotes(mNotesEntries);
+        }
     }
 
     private void showDeleteConfirmationDialog() {
@@ -241,8 +242,8 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
     }
 
     private void setupViewModel() {
-        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.getNotes().observe(this, new Observer<List<NotesEntry>>() {
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mViewModel.getNotes().observe(this, new Observer<List<NotesEntry>>() {
             @Override
             public void onChanged(List<NotesEntry> notesEntries) {
                 mAdapter.setNotes(notesEntries);

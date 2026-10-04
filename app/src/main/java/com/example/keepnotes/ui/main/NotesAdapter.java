@@ -1,4 +1,4 @@
-package com.example.keepnotes;
+package com.example.keepnotes.ui.main;
 
 import android.content.Context;
 import android.provider.ContactsContract;
@@ -12,7 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.keepnotes.databases.NotesEntry;
+import com.example.keepnotes.R;
+import com.example.keepnotes.data.database.NotesEntry;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_drawing_tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/drawing_tools_bg"
+    android:elevation="3dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_size_mode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pencil size"
+            android:textColor="#202534"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_pen_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 dp"
+            android:textColor="#697386"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/seek_pen_size"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:max="59"
+        android:progress="4"
+        android:progressTint="#536DFE"
+        android:thumbTint="#536DFE"
+        android:progressBackgroundTint="#E1E5ED" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_eraser"
+                android:layout_width="48dp"
+                android:layout_height="44dp"
+                android:background="@drawable/drawing_eraser_button"
+                android:contentDescription="Toggle eraser tool"
+                android:padding="8dp"
+                android:src="@drawable/ic_eraser"
+                android:scaleType="centerInside" />
+
+            <TextView
+                android:id="@+id/txt_tool_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Eraser"
+                android:textColor="#202534"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to erase"
+                android:textColor="#8791A2"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/color_black"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="0dp"
+                android:background="@drawable/color_dot_black"
+                android:contentDescription="Black pencil" />
+
+            <ImageButton
+                android:id="@+id/color_blue"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/color_dot_blue"
+                android:contentDescription="Blue pencil" />
+
+            <ImageButton
+                android:id="@+id/color_red"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/color_dot_red"
+                android:contentDescription="Red pencil" />
+
+            <ImageButton
+                android:id="@+id/color_green"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/color_dot_green"
+                android:contentDescription="Green pencil" />
+
+            <ImageButton
+                android:id="@+id/btn_color_picker"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Choose pencil color"
+                android:padding="10dp"
+                android:src="@drawable/ic_color"
+                android:tint="#495469" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

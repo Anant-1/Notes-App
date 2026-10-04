@@ -11,4 +11,9 @@
     <color name="bottom_app_bar_color">#344955</color>
     <color name="yellow_color_of_fab">#f9aa33</color>
     <color name="pink_color">#f3b5b9</color>
+    <color name="drawing_ink">#202534</color>
+    <color name="drawing_blue">#536DFE</color>
+    <color name="drawing_red">#EF5350</color>
+    <color name="drawing_green">#26A69A</color>
+    <color name="drawing_selected_bg">#E8ECFF</color>
 </resources>
