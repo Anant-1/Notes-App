@@ -25,7 +25,9 @@
             android:label="Add Note"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AddNoteActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

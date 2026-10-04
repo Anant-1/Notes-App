@@ -82,10 +82,9 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Item
         mBottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_delete_all:
-                        showDeleteConfirmationDialog();
-                        return true;
+                if (item.getItemId() == R.id.action_delete_all) {
+                    showDeleteConfirmationDialog();
+                    return true;
                 }
                 return true;
             }
