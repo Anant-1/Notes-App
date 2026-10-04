@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SignatureView">
+        <attr name="backgroundColor" format="color" />
+        <attr name="enableSignature" format="boolean" />
+        <attr name="penColor" format="color" />
+        <attr name="penSize" format="dimension" />
+    </declare-styleable>
+</resources>

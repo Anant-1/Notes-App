@@ -38,7 +38,6 @@ public class CreateDrawing extends AppCompatActivity {
         textPenSize = findViewById(R.id.txt_pen_size);
         imgEraser = findViewById(R.id.btn_eraser);
         imgColor = findViewById(R.id.btn_color_picker);
-        scrollView = findViewById(R.id.scrollView);
 
 //        signatureView.setOnTouchListener(new View.OnTouchListener(){
 //            @Override
@@ -115,22 +114,18 @@ public class CreateDrawing extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-
-                scrollView.requestDisallowInterceptTouchEvent(true);
-
-                break;
-            case MotionEvent.ACTION_UP:
-
-                scrollView.requestDisallowInterceptTouchEvent(false);
-
-
-                break;
-            default:
-                break;
+        if (scrollView != null) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                    break;
+                default:
+                    break;
+            }
         }
-
         return super.onTouchEvent(event);
-  }
+    }
 }

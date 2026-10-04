@@ -146,22 +146,20 @@ public class AddNoteActivity extends AppCompatActivity {
         mBottomAppBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.delete_note:
-                        deleteNote();
-                        return true;
-                    case R.id.make_copy_note:
-                        makeCopy();
-                        return true;
-                    case R.id.share_note:
-                        String note = mNoteEditText.getText().toString().trim();
-                        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, note);
-//                        sendIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
-//                        sendIntent.setType("image/jpeg");
-                        sendIntent.setType("text/plain");
-                        startActivity(Intent.createChooser(sendIntent, null));
-                        return true;
+                int itemId = item.getItemId();
+                if (itemId == R.id.delete_note) {
+                    deleteNote();
+                    return true;
+                } else if (itemId == R.id.make_copy_note) {
+                    makeCopy();
+                    return true;
+                } else if (itemId == R.id.share_note) {
+                    String note = mNoteEditText.getText().toString().trim();
+                    Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, note);
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, null));
+                    return true;
                 }
                 return true;
             }
@@ -296,20 +294,19 @@ public class AddNoteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: // for up arrow button
-                if (mNoteHasChanged)
-                    onSave();
-                NavUtils.navigateUpFromSameTask(AddNoteActivity.this);
-                Animatoo.animateZoom(this);
-                finish();
-                return true;
-            case R.id.copy_btn:
-
-                ClipboardManager clipboardManager = (ClipboardManager)this.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData data = ClipData.newPlainText("text", mNoteText);
-                clipboardManager.setPrimaryClip(data);
-                Toast.makeText(AddNoteActivity.this, "Text Copied", Toast.LENGTH_SHORT).show();
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) { // for up arrow button
+            if (mNoteHasChanged)
+                onSave();
+            NavUtils.navigateUpFromSameTask(AddNoteActivity.this);
+            Animatoo.animateZoom(this);
+            finish();
+            return true;
+        } else if (itemId == R.id.copy_btn) {
+            ClipboardManager clipboardManager = (ClipboardManager)this.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData data = ClipData.newPlainText("text", mNoteText);
+            clipboardManager.setPrimaryClip(data);
+            Toast.makeText(AddNoteActivity.this, "Text Copied", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
